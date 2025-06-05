@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">{% if form.instance.id %}Editar Proyecto{% else %}Nuevo Proyecto{% endif %}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+                            {{ form.nombre }}
+                            {% if form.nombre.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.nombre.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción</label>
+                            {{ form.descripcion }}
+                            {% if form.descripcion.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.descripcion.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.fecha_inicio.id_for_label }}" class="form-label">Fecha de Inicio</label>
+                                {{ form.fecha_inicio }}
+                                {% if form.fecha_inicio.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.fecha_inicio.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.fecha_fin.id_for_label }}" class="form-label">Fecha de Fin</label>
+                                {{ form.fecha_fin }}
+                                {% if form.fecha_fin.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.fecha_fin.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.estado.id_for_label }}" class="form-label">Estado</label>
+                                {{ form.estado }}
+                                {% if form.estado.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.estado.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.presupuesto.id_for_label }}" class="form-label">Presupuesto</label>
+                                {{ form.presupuesto }}
+                                {% if form.presupuesto.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.presupuesto.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.responsable.id_for_label }}" class="form-label">Responsable</label>
+                            {{ form.responsable }}
+                            {% if form.responsable.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.responsable.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.asignados.id_for_label }}" class="form-label">Equipo Asignado</label>
+                            {{ form.asignados }}
+                            {% if form.asignados.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.asignados.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.foto.id_for_label }}" class="form-label">Foto del Proyecto</label>
+                            {{ form.foto }}
+                            {% if form.foto.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.foto.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.activo }}
+                                <label class="form-check-label" for="{{ form.activo.id_for_label }}">
+                                    Proyecto Activo
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <a href="{% url 'proyecto_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

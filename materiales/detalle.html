@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">
+                <i class="bi bi-box-seam"></i> Detalle del Material
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h4>Información Básica</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Nombre:</strong> {{ material.nombre }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Cantidad en stock:</strong> {{ material.cantidad }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Fecha creación:</strong> {{ material.fecha_creacion|date:"d/m/Y H:i" }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h4>Descripción Completa</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            {{ material.descripcion|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+                <a href="{% url 'materiales:lista' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver al listado
+                </a>
+                <div>
+                    <a href="{% url 'materiales:editar' material.pk %}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                    <a href="{% url 'materiales:eliminar' material.pk %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

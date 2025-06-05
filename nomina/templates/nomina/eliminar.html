@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h2>Eliminar Nómina</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">¿Está seguro que desea eliminar la nómina de {{ nomina.empleado }} del período {{ nomina.periodo }}?</p>
+            
+            <div class="alert alert-warning">
+                <h4 class="alert-heading">¡Advertencia!</h4>
+                <p>Esta acción no se puede deshacer. Se eliminará permanentemente la nómina y toda su información asociada.</p>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h4>Detalles de la Nómina</h4>
+                    <p><strong>Empleado:</strong> {{ nomina.empleado }}</p>
+                    <p><strong>Período:</strong> {{ nomina.periodo }}</p>
+                    <p><strong>Total:</strong> ${{ nomina.total }}</p>
+                    <p><strong>Estado:</strong> {{ nomina.estado }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Confirmar Eliminación
+                </button>
+                <a href="{% url 'nomina:detalle' nomina.id %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                {% if proyecto.foto %}
+                <img src="{{ proyecto.foto.url }}" class="card-img-top" alt="{{ proyecto.nombre }}">
+                {% endif %}
+                <div class="card-body">
+                    <h1 class="card-title">{{ proyecto.nombre }}</h1>
+                    <div class="mb-3">
+                        <span class="badge {% if proyecto.estado == 'PLAN' %}bg-info{% elif proyecto.estado == 'EJE' %}bg-success{% elif proyecto.estado == 'SUS' %}bg-warning{% elif proyecto.estado == 'COM' %}bg-primary{% else %}bg-danger{% endif %}">
+                            {{ proyecto.get_estado_display }}
+                        </span>
+                    </div>
+                    <p class="card-text">{{ proyecto.descripcion }}</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h5>Información del Proyecto</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-calendar"></i> Fecha de inicio: {{ proyecto.fecha_inicio|date:"d/m/Y" }}</li>
+                                {% if proyecto.fecha_fin %}
+                                <li><i class="fas fa-calendar-check"></i> Fecha de fin: {{ proyecto.fecha_fin|date:"d/m/Y" }}</li>
+                                {% endif %}
+                                <li><i class="fas fa-money-bill-wave"></i> Presupuesto: ${{ proyecto.presupuesto }}</li>
+                                <li><i class="fas fa-user"></i> Responsable: {{ proyecto.responsable|default:"No asignado" }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Equipo Asignado</h5>
+                            {% if proyecto.asignados.all %}
+                            <ul class="list-unstyled">
+                                {% for usuario in proyecto.asignados.all %}
+                                <li><i class="fas fa-user-check"></i> {{ usuario.get_full_name|default:usuario.username }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted">No hay miembros asignados</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group">
+                        <a href="{% url 'proyecto_update' proyecto.pk %}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a href="{% url 'proyecto_delete' proyecto.pk %}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </a>
+                        <a href="{% url 'proyecto_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

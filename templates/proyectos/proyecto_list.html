@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Proyectos</h1>
+        <a href="{% url 'proyecto_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Proyecto
+        </a>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row">
+        {% for proyecto in proyectos %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                {% if proyecto.foto %}
+                <img src="{{ proyecto.foto.url }}" class="card-img-top" alt="{{ proyecto.nombre }}">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-project-diagram fa-3x text-muted"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ proyecto.nombre }}</h5>
+                    <p class="card-text">{{ proyecto.descripcion|truncatechars:100 }}</p>
+                    <div class="mb-2">
+                        <span class="badge {% if proyecto.estado == 'PLAN' %}bg-info{% elif proyecto.estado == 'EJE' %}bg-success{% elif proyecto.estado == 'SUS' %}bg-warning{% elif proyecto.estado == 'COM' %}bg-primary{% else %}bg-danger{% endif %}">
+                            {{ proyecto.get_estado_display }}
+                        </span>
+                    </div>
+                    <div class="small text-muted mb-2">
+                        <i class="fas fa-calendar"></i> Inicio: {{ proyecto.fecha_inicio|date:"d/m/Y" }}
+                        {% if proyecto.fecha_fin %}
+                        <br><i class="fas fa-calendar-check"></i> Fin: {{ proyecto.fecha_fin|date:"d/m/Y" }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="btn-group w-100">
+                        <a href="{% url 'proyecto_detail' proyecto.pk %}" class="btn btn-outline-primary">
+                            <i class="fas fa-eye"></i> Ver
+                        </a>
+                        <a href="{% url 'proyecto_update' proyecto.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a href="{% url 'proyecto_delete' proyecto.pk %}" class="btn btn-outline-danger">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No hay proyectos registrados. <a href="{% url 'proyecto_create' %}">Crear nuevo proyecto</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

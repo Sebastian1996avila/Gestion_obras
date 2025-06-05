@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4" role="main">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Registrar Nueva Nómina</h3>
+                </div>
+                <div class="card-body">
+                    <div id="messages-container" class="messages" role="alert">
+                        <!-- Mensajes se mostrarán aquí dinámicamente -->
+                    </div>
+
+                    <form id="nomina-form" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="id_empleado_id" class="form-label">Empleado:</label>
+                            <select name="empleado_id" id="id_empleado_id" class="form-select" required aria-required="true">
+                                <option value="">Seleccione un empleado</option>
+                                <!-- Opciones se cargarán dinámicamente via API -->
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_periodo" class="form-label">Período:</label>
+                            <input type="text" name="periodo" id="id_periodo" class="form-control" 
+                                   placeholder="YYYY-MM (ejemplo: 2024-03)" 
+                                   pattern="\d{4}-\d{2}" 
+                                   required aria-required="true">
+                            <div class="form-text">Formato: YYYY-MM (ejemplo: 2024-03)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_dias_trabajados" class="form-label">Días Trabajados:</label>
+                            <input type="number" name="dias_trabajados" id="id_dias_trabajados" class="form-control" step="0.01" min="0" max="31" required aria-required="true">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_sueldo_base" class="form-label">Sueldo Base:</label>
+                            <input type="number" name="sueldo_base" id="id_sueldo_base" class="form-control" step="0.01" min="0" required aria-required="true">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_horas_extras" class="form-label">Horas Extras:</label>
+                            <input type="number" name="horas_extras" id="id_horas_extras" class="form-control" step="0.01" min="0" value="0" required aria-required="true">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_bonificaciones" class="form-label">Bonificaciones:</label>
+                            <input type="number" name="bonificaciones" id="id_bonificaciones" class="form-control" step="0.01" min="0" value="0" required aria-required="true">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_deducciones" class="form-label">Deducciones:</label>
+                            <input type="number" name="deducciones" id="id_deducciones" class="form-control" step="0.01" min="0" value="0" required aria-required="true">
+                        </div>
+
+                        <div class="mb-3">
+                            <div id="total_calculado" class="alert alert-info" role="status" aria-live="polite">Total: $0.00</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" aria-label="Guardar nómina">Guardar Nómina</button>
+                            <a href="#" id="cancel-btn" class="btn btn-secondary" role="button" aria-label="Cancelar y volver a la lista">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+
+    // Cargar empleados desde API
+    fetchEmpleados();
+
+    // Configurar formulario
+    const form = document.getElementById('nomina-form');
+    form.addEventListener('submit', handleSubmit);
+
+    // Configurar botón cancelar
+    document.getElementById('cancel-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = '/nominas';
+    });
+
+    // Validación y cálculo del total
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+
+    // Cálculo automático del total
+    const inputs = ['sueldo_base', 'horas_extras', 'bonificaciones', 'deducciones'];
+    inputs.forEach(inputId => {
+        document.getElementById(`id_${inputId}`).addEventListener('input', calculateTotal);
+    });
+
+    calculateTotal();
+});
+
+async function fetchEmpleados() {
+    try {
+        const response = await fetch('/api/empleados/', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al cargar empleados');
+        }
+
+        const data = await response.json();
+        const select = document.getElementById('id_empleado_id');
+        
+        data.forEach(empleado => {
+            const option = document.createElement('option');
+            option.value = empleado.id;
+            option.textContent = empleado.nombre_completo || `${empleado.nombre} ${empleado.apellido}`;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        showMessage('Error al cargar la lista de empleados', 'danger');
+        console.error('Error:', error);
+    }
+}
+
+async function handleSubmit(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    if (!form.checkValidity()) {
+        return;
+    }
+
+    const formData = {
+        empleado_id: document.getElementById('id_empleado_id').value,
+        periodo: document.getElementById('id_periodo').value,
+        dias_trabajados: parseFloat(document.getElementById('id_dias_trabajados').value),
+        sueldo_base: parseFloat(document.getElementById('id_sueldo_base').value),
+        horas_extras: parseFloat(document.getElementById('id_horas_extras').value) || 0,
+        bonificaciones: parseFloat(document.getElementById('id_bonificaciones').value) || 0,
+        deducciones: parseFloat(document.getElementById('id_deducciones').value) || 0
+    };
+
+    try {
+        const response = await fetch('/api/nomina/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Error al guardar la nómina');
+        }
+
+        showMessage('Nómina creada exitosamente', 'success');
+        setTimeout(() => window.location.href = '/nominas', 1500);
+    } catch (error) {
+        showMessage(error.message, 'danger');
+        console.error('Error:', error);
+    }
+}
+
+function calculateTotal() {
+    const sueldoBase = parseFloat(document.getElementById('id_sueldo_base').value) || 0;
+    const horasExtras = parseFloat(document.getElementById('id_horas_extras').value) || 0;
+    const bonificaciones = parseFloat(document.getElementById('id_bonificaciones').value) || 0;
+    const deducciones = parseFloat(document.getElementById('id_deducciones').value) || 0;
+
+    const valorHoraNormal = sueldoBase / (30 * 8);
+    const valorHorasExtras = horasExtras * valorHoraNormal * 1.5;
+    const total = sueldoBase + valorHorasExtras + bonificaciones - deducciones;
+    
+    document.getElementById('total_calculado').textContent = `Total: $${total.toFixed(2)}`;
+}
+
+function showMessage(message, type) {
+    const container = document.getElementById('messages-container');
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.setAttribute('role', 'alert');
+    alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    container.appendChild(alert);
+}
+</script>
+{% endblock %}

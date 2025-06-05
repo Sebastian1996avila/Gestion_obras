@@ -1,0 +1,149 @@
+<!-- materiales/templates/materiales/crear.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Crear Nuevo Material</h2>
+    <form method="post" action="{% url 'materiales:crear' %}" class="material-form">
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="{{ form.codigo.id_for_label }}">Código:</label>
+                    {{ form.codigo }}
+                    {% if form.codigo.errors %}
+                        <div class="error">{{ form.codigo.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
+                    {{ form.nombre }}
+                    {% if form.nombre.errors %}
+                        <div class="error">{{ form.nombre.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.categoria.id_for_label }}">Categoría:</label>
+                    {{ form.categoria }}
+                    {% if form.categoria.errors %}
+                        <div class="error">{{ form.categoria.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.descripcion.id_for_label }}">Descripción:</label>
+                    {{ form.descripcion }}
+                    {% if form.descripcion.errors %}
+                        <div class="error">{{ form.descripcion.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="{{ form.cantidad.id_for_label }}">Cantidad:</label>
+                    {{ form.cantidad }}
+                    {% if form.cantidad.errors %}
+                        <div class="error">{{ form.cantidad.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.unidad_medida.id_for_label }}">Unidad de Medida:</label>
+                    {{ form.unidad_medida }}
+                    {% if form.unidad_medida.errors %}
+                        <div class="error">{{ form.unidad_medida.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.precio_unitario.id_for_label }}">Precio Unitario:</label>
+                    {{ form.precio_unitario }}
+                    {% if form.precio_unitario.errors %}
+                        <div class="error">{{ form.precio_unitario.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.stock_minimo.id_for_label }}">Stock Mínimo:</label>
+                    {{ form.stock_minimo }}
+                    {% if form.stock_minimo.errors %}
+                        <div class="error">{{ form.stock_minimo.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.ubicacion.id_for_label }}">Ubicación:</label>
+                    {{ form.ubicacion }}
+                    {% if form.ubicacion.errors %}
+                        <div class="error">{{ form.ubicacion.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.proveedor.id_for_label }}">Proveedor:</label>
+                    {{ form.proveedor }}
+                    {% if form.proveedor.errors %}
+                        <div class="error">{{ form.proveedor.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-actions mt-3">
+            <button type="submit" class="btn btn-primary">Guardar Material</button>
+            <a href="{% url 'materiales:lista' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.material-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.error {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 5px;
+}
+
+.form-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+.btn {
+    margin-right: 10px;
+}
+</style>
+{% endblock %}

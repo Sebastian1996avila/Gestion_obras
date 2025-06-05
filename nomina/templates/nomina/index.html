@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Nóminas</h2>
+        <a href="{% url 'nomina:registrar' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Nómina
+        </a>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Empleado</th>
+                            <th>Período</th>
+                            <th>Días Trabajados</th>
+                            <th>Sueldo Base</th>
+                            <th>Horas Extras</th>
+                            <th>Bonificaciones</th>
+                            <th>Deducciones</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for nomina in nominas %}
+                        <tr>
+                            <td>{{ nomina.empleado }}</td>
+                            <td>{{ nomina.periodo }}</td>
+                            <td>{{ nomina.dias_trabajados }}</td>
+                            <td>${{ nomina.sueldo_base }}</td>
+                            <td>{{ nomina.horas_extras }}</td>
+                            <td>${{ nomina.bonificaciones }}</td>
+                            <td>${{ nomina.deducciones }}</td>
+                            <td>${{ nomina.total }}</td>
+                            <td>
+                                <span class="badge {% if nomina.estado == 'Pagado' %}bg-success{% elif nomina.estado == 'Pendiente' %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ nomina.estado }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'nomina:detalle' nomina.id %}" class="btn btn-sm btn-info" title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'nomina:editar' nomina.id %}" class="btn btn-sm btn-warning" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'nomina:eliminar' nomina.id %}" class="btn btn-sm btn-danger" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="10" class="text-center">No hay nóminas registradas</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

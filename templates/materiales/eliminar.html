@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Eliminar Material</h2>
+    
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">¿Está seguro que desea eliminar el material "{{ material.nombre }}"?</h5>
+            <p class="card-text text-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                Esta acción no se puede deshacer.
+            </p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Confirmar Eliminación
+                </button>
+                <a href="{% url 'materiales:detalle' material.pk %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Nómina</h2>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="{{ form.empleado.id_for_label }}">Empleado:</label>
+                    {{ form.empleado }}
+                    {% if form.empleado.errors %}
+                        <div class="text-danger">{{ form.empleado.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.periodo.id_for_label }}">Período:</label>
+                    {{ form.periodo }}
+                    {% if form.periodo.errors %}
+                        <div class="text-danger">{{ form.periodo.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.dias_trabajados.id_for_label }}">Días Trabajados:</label>
+                    {{ form.dias_trabajados }}
+                    {% if form.dias_trabajados.errors %}
+                        <div class="text-danger">{{ form.dias_trabajados.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.sueldo_base.id_for_label }}">Sueldo Base:</label>
+                    {{ form.sueldo_base }}
+                    {% if form.sueldo_base.errors %}
+                        <div class="text-danger">{{ form.sueldo_base.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="{{ form.horas_extras.id_for_label }}">Horas Extras:</label>
+                    {{ form.horas_extras }}
+                    {% if form.horas_extras.errors %}
+                        <div class="text-danger">{{ form.horas_extras.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.bonificaciones.id_for_label }}">Bonificaciones:</label>
+                    {{ form.bonificaciones }}
+                    {% if form.bonificaciones.errors %}
+                        <div class="text-danger">{{ form.bonificaciones.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.deducciones.id_for_label }}">Deducciones:</label>
+                    {{ form.deducciones }}
+                    {% if form.deducciones.errors %}
+                        <div class="text-danger">{{ form.deducciones.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.total.id_for_label }}">Total:</label>
+                    {{ form.total }}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.estado.id_for_label }}">Estado:</label>
+                    {{ form.estado }}
+                    {% if form.estado.errors %}
+                        <div class="text-danger">{{ form.estado.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <a href="{% url 'nomina:detalle' nomina.id %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input[type="number"]');
+    
+    function calcularTotal() {
+        const sueldoBase = parseFloat(document.getElementById('{{ form.sueldo_base.id_for_label }}').value) || 0;
+        const horasExtras = parseFloat(document.getElementById('{{ form.horas_extras.id_for_label }}').value) || 0;
+        const bonificaciones = parseFloat(document.getElementById('{{ form.bonificaciones.id_for_label }}').value) || 0;
+        const deducciones = parseFloat(document.getElementById('{{ form.deducciones.id_for_label }}').value) || 0;
+        
+        // Calcular valor de horas extras (1.5 veces el valor hora normal)
+        const valorHoraNormal = sueldoBase / (30 * 8); // 30 días, 8 horas por día
+        const valorHorasExtras = horasExtras * valorHoraNormal * 1.5;
+        
+        // Calcular total
+        const total = sueldoBase + valorHorasExtras + bonificaciones - deducciones;
+        
+        document.getElementById('{{ form.total.id_for_label }}').value = total.toFixed(2);
+    }
+    
+    inputs.forEach(input => {
+        input.addEventListener('input', calcularTotal);
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

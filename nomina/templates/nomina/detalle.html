@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Detalles de la Nómina</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Información del Empleado</h4>
+                    <p><strong>Empleado:</strong> {{ nomina.empleado }}</p>
+                    <p><strong>Período:</strong> {{ nomina.periodo }}</p>
+                    <p><strong>Estado:</strong> 
+                        <span class="badge {% if nomina.estado == 'Pagado' %}bg-success{% elif nomina.estado == 'Pendiente' %}bg-warning{% else %}bg-danger{% endif %}">
+                            {{ nomina.estado }}
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h4>Información de Pago</h4>
+                    <p><strong>Días Trabajados:</strong> {{ nomina.dias_trabajados }}</p>
+                    <p><strong>Sueldo Base:</strong> ${{ nomina.sueldo_base }}</p>
+                    <p><strong>Horas Extras:</strong> {{ nomina.horas_extras }}</p>
+                    <p><strong>Bonificaciones:</strong> ${{ nomina.bonificaciones }}</p>
+                    <p><strong>Deducciones:</strong> ${{ nomina.deducciones }}</p>
+                    <p><strong>Total:</strong> ${{ nomina.total }}</p>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h4>Información Adicional</h4>
+                    <p><strong>Fecha de Creación:</strong> {{ nomina.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Última Actualización:</strong> {{ nomina.fecha_actualizacion|date:"d/m/Y H:i" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'nomina:editar' nomina.id %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            <a href="{% url 'nomina:eliminar' nomina.id %}" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Eliminar
+            </a>
+            <a href="{% url 'nomina:index' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 
