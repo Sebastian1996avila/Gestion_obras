@@ -1,99 +1,105 @@
 # Sistema de Gestión de Obras
 
-Este sistema permite la gestión integral de obras, incluyendo control de asistencia, nómina, materiales y proyectos.
+Sistema integral para la gestión de obras de construcción, desarrollado con Django y React.
 
-## Requisitos Previos
+## Características
 
-- Python 3.8 o superior
-- Node.js 14.x o superior
-- PostgreSQL 12 o superior
-- pip (gestor de paquetes de Python)
-- npm (gestor de paquetes de Node.js)
+- Gestión de proyectos y obras
+- Control de materiales y inventario
+- Gestión de nómina y personal
+- Control de asistencia
+- Gestión de usuarios y permisos
+- API REST para integración con otros sistemas
+
+## Requisitos
+
+- Python 3.8+
+- Node.js 14+
+- PostgreSQL 12+
 
 ## Instalación
 
-### 1. Clonar el Repositorio
-
+1. Clonar el repositorio:
 ```bash
-git clone [URL_DEL_REPOSITORIO]
-cd gestion_obras
+git clone https://github.com/Sebastian1996avila/gestion-obras.git
+cd gestion-obras
 ```
 
-### 2. Configuración del Entorno Virtual
-
+2. Crear y activar entorno virtual:
 ```bash
-# Crear entorno virtual
 python -m venv venv
-
-# Activar entorno virtual
-# En Windows:
-venv\Scripts\activate
-# En Linux/Mac:
-source venv/bin/activate
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
 ```
 
-### 3. Instalación de Dependencias
-
+3. Instalar dependencias de Python:
 ```bash
-# Instalar dependencias de Python
 pip install -r requirements.txt
+```
 
-# Instalar dependencias de Node.js
+4. Instalar dependencias de Node.js:
+```bash
+cd frontend
 npm install
 ```
 
-### 4. Configuración de Variables de Entorno
-
-Crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
-
-```env
-DEBUG=True
-SECRET_KEY=tu_clave_secreta
-DATABASE_URL=postgresql://usuario:contraseña@localhost:5432/nombre_db
-ALLOWED_HOSTS=localhost,127.0.0.1
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-```
-
-### 5. Configuración de la Base de Datos
-
-1. Crear una base de datos PostgreSQL:
-```sql
-CREATE DATABASE nombre_db;
-```
-
-2. Aplicar las migraciones:
+5. Configurar variables de entorno:
 ```bash
-python manage.py makemigrations
+cp .env.example .env
+# Editar .env con tus configuraciones
+```
+
+6. Aplicar migraciones:
+```bash
 python manage.py migrate
 ```
 
-3. Crear un superusuario:
+7. Crear superusuario:
 ```bash
 python manage.py createsuperuser
 ```
 
-### 6. Ejecución del Proyecto
-
-#### Backend (Django)
+8. Iniciar servidor de desarrollo:
 ```bash
-# En modo desarrollo
+# Backend
 python manage.py runserver
 
-# En modo producción
-gunicorn gestion_obras.wsgi:application
-```
-
-#### Frontend
-```bash
-# Navegar al directorio frontend
+# Frontend (en otra terminal)
 cd frontend
-
-# Instalar dependencias
-npm install
-
-# Iniciar servidor de desarrollo
-npm start
+npm run dev
 ```
+
+## Estructura del Proyecto
+
+```
+gestion-obras/
+├── backend/           # API Django
+├── frontend/          # Aplicación React
+├── asistencia/        # Módulo de asistencia
+├── materiales/        # Módulo de materiales
+├── nomina/           # Módulo de nómina
+├── obras/            # Módulo de obras
+├── proyectos/        # Módulo de proyectos
+└── usuarios/         # Módulo de usuarios
+```
+
+## Contribuir
+
+1. Fork el repositorio
+2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abrir un Pull Request
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## Contacto
+
+Sebastián Ávila - sebastian1996avila@gmail.com
+
+Link del proyecto: [https://github.com/Sebastian1996avila/gestion-obras](https://github.com/Sebastian1996avila/gestion-obras)
 
 ## Despliegue
 
@@ -115,21 +121,6 @@ npm start
 5. Configurar el servicio de base de datos
 6. Configurar el servicio de archivos estáticos
 
-## Estructura del Proyecto
-
-```
-gestion_obras/
-├── backend/           # API REST
-├── frontend/          # Aplicación React
-├── database/          # Scripts de base de datos
-├── templates/         # Plantillas HTML
-├── staticfiles/       # Archivos estáticos
-├── media/            # Archivos multimedia
-└── manage.py         # Script de administración de Django
-```
-
 ## Soporte
 
 Para reportar problemas o solicitar ayuda, por favor crear un issue en el repositorio del proyecto.
-
-## Licencia
